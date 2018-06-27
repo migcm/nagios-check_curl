@@ -27,7 +27,7 @@ Check a web page contents for specific search terms. Built on [check_curl2](http
 
 
 ### Examples:
-```check_curl -U http://test.example.net";```
+```check_curl -U http://test.example.net```
 
 ```check_curl -U http://test.example.net:8888/info -he 'X-Requested-Auth: Digest' -ao CURLAUTH_DIGEST -a "USER:PASSWORD" -G searchme -G searchme2```
 
