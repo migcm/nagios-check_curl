@@ -1,5 +1,6 @@
 # nagios-check_curl
-Check a web page contents for specific search terms. Built on [check_curl2](https://exchange.nagios.org/directory/Plugins/Websites,-Forms-and-Transactions/check_curl2/) posted on Nagios Exchange by nagiosexchange. Added capability to define authentication type, number of apparitions of Grep, header values, HTTP expected code, etc.
+
+NRPE Plugin - Check a web page contents for specific search terms. Built on [check_curl2](https://exchange.nagios.org/directory/Plugins/Websites,-Forms-and-Transactions/check_curl2/) posted on Nagios Exchange by nagiosexchange. Added capability to define authentication type, number of apparitions of Grep, header values, HTTP expected code, etc.
 
 
 ### Syntax and options:
