@@ -227,6 +227,17 @@ if ($Pocet > 1) {
                 if ($Debug)
                     echo "\nDEBUG: -I";
                 break;
+				
+			case '-tag':
+				if ($Pocet > $i + 1) {
+                    $tag = $argv[++$i];
+                    if ($Debug)
+                        echo "\nDEBUG: -tag " . $argv[$i];
+                } else {
+                    echo "UNKNOWN - ERROR in parsing argument -tag: missing value\n";
+                    exit(3);
+                }
+                break;
             
             case '--help':
             case '-h':
@@ -417,7 +428,9 @@ if ($Pocet > 1) {
         }
     }
         
-    switch ($Status) {
+
+	$message = (isset($tag)) ? $tag." - ".$message : $message;
+	switch ($Status) {
         case 1:
             $message = 'WARNING - ' . $message;
             break;
@@ -483,6 +496,7 @@ function Manual()
     -T Timeout (i)(default: 10sec)
     -O Output Driven Check - Page Should respond with \"Status: OK\" or otherwise
   	-hc HTTP expected code (default: 200)
+	-tag Tag to identify the ckeck in the return message
   \n Example:
   check_curl.php -U http://test.example.net\n\n";
 }
