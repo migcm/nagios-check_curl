@@ -496,7 +496,7 @@ function Manual()
     -T Timeout (i)(default: 10sec)
     -O Output Driven Check - Page Should respond with \"Status: OK\" or otherwise
   	-hc HTTP expected code (default: 200)
-	-tag Tag to identify the ckeck in the return message
+	-tag Tag to identify the check in the return message
   \n Example:
   check_curl.php -U http://test.example.net\n\n";
 }

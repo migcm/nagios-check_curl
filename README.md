@@ -24,6 +24,7 @@ Check a web page contents for specific search terms. Built on [check_curl2](http
     -T Timeout (i)(default: 10sec)
     -O Output Driven Check - Page Should respond with \"Status: OK\" or otherwise
     -hc HTTP expected code (default: 200)
+	-tag Tag to identify the check in the return message
 
 
 ### Examples:
