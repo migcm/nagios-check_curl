@@ -1,11 +1,10 @@
 #!/usr/bin/php -q
-
 <?php
 
 // Changeable variables
 $Debug   = 0;
 $Timeout = 10;
-$Agent      = "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20150101 Firefox/47.0 (Chrome)";
+$Agent      = 'Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20150101 Firefox/47.0 (Chrome)';
 $Status     = 0;
 $InludePerf = 1;
 $httpCode = 200;
@@ -498,7 +497,6 @@ function Manual()
   	-hc HTTP expected code (default: 200)
 	-tag Tag to identify the check in the return message
   \n Example:
-  check_curl.php -U http://test.example.net\n\n";
+  check_curl.php -U http://test.example.net \n\n";
 }
 
-?>
