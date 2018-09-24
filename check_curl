@@ -1,4 +1,4 @@
-#!/usr/bin/php -q
+#!/usr/bin/php
 <?php
 
 // Changeable variables
@@ -11,6 +11,7 @@ $httpCode = 200;
 $message     = '';
 $ShowPage   = 0;
 $authOption = '';
+$exist = true;
 
 $ch    = curl_init();
 
@@ -18,7 +19,7 @@ $Pocet = count($argv);
 if ($Pocet > 1) {
     for ($i = 1; $i < $Pocet; $i++) {
         switch ($argv[$i]) {
-            
+
             case '-U':
                 if ($Pocet > $i + 1) {
                     curl_setopt($ch, CURLOPT_URL, $argv[++$i]);
@@ -29,7 +30,7 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-A':
                 if ($Pocet > $i + 1) {
                     $Agent = $argv[++$i];
@@ -40,7 +41,7 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-a':
                 if ($Pocet > $i + 1) {
                     curl_setopt($ch, CURLOPT_USERPWD, $argv[++$i]);
@@ -51,7 +52,7 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-ao':
                 if ($Pocet > $i + 1) {
                     $authOption = $argv[++$i];
@@ -62,7 +63,7 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-he':
                 if ($Pocet > $i + 1) {
                     $headers[] = $argv[++$i];
@@ -73,7 +74,7 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-T':
                 if ($Pocet > $i + 1) {
                     $Timeout = $argv[++$i];
@@ -84,7 +85,18 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
+            case '-NG':
+                if ($Pocet > $i + 1) {
+                    $NGrep[] = $argv[++$i];
+                    if ($Debug)
+                        echo "\nDEBUG: -NG " . $argv[$i];
+                } else {
+                    echo "UNKNOWN - ERROR in parsing argument -NG: missing value\n";
+                    exit(3);
+                }
+                break;
+
             case '-G':
                 if ($Pocet > $i + 1) {
                     $Grep[] = $argv[++$i];
@@ -106,7 +118,7 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-hc':
                 if ($Pocet > $i + 1) {
                     $httpCode = $argv[++$i];
@@ -128,7 +140,7 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-Tw':
                 if ($Pocet > $i + 1) {
                     $Tw = $argv[++$i];
@@ -139,7 +151,7 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-Sbc':
                 if ($Pocet > $i + 1) {
                     $Sbc = $argv[++$i];
@@ -150,7 +162,7 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-Sbw':
                 if ($Pocet > $i + 1) {
                     $Sbw = $argv[++$i];
@@ -161,7 +173,7 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-Soc':
                 if ($Pocet > $i + 1) {
                     $Soc = $argv[++$i];
@@ -172,7 +184,7 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-Sow':
                 if ($Pocet > $i + 1) {
                     $Sow = $argv[++$i];
@@ -183,7 +195,7 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-S':
                 if ($Pocet > $i + 2) {
                     $String1 = $argv[++$i];
@@ -195,38 +207,38 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '-O':
                 $UseOutput = 1;
                 if ($Debug)
                     echo "\nDEBUG: -O";
                 break;
-            
+
             case '-L':
                 $ShowPage = 1;
                 if ($Debug)
                     echo "\nDEBUG: -L";
                 break;
-            
+
             case '-F':
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
                 if ($Debug)
                     echo "\nDEBUG: -F";
                 break;
-            
+
             case '-X':
                 $InludePerf = 0;
                 if ($Debug)
                     echo "\nDEBUG: -X";
                 break;
-            
+
             case '-I':
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 if ($Debug)
                     echo "\nDEBUG: -I";
                 break;
-				
+
 			case '-tag':
 				if ($Pocet > $i + 1) {
                     $tag = $argv[++$i];
@@ -237,29 +249,29 @@ if ($Pocet > 1) {
                     exit(3);
                 }
                 break;
-            
+
             case '--help':
             case '-h':
                 Manual();
                 exit(3);
                 break;
-            
+
             default:
                 echo "UNKNOWN - ERROR in argument parsing: ". $argv[$i] ."\n";
                 exit(3);
                 break;
         }
     }
-    
+
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_USERAGENT, $Agent);
     curl_setopt($ch, CURLOPT_TIMEOUT, $Timeout);
-    
+
     if (isset($headers)) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     }
-    
+
     switch ($authOption) {
         case 'CURLAUTH_DIGEST':
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
@@ -281,7 +293,7 @@ if ($Pocet > 1) {
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
             break;
     }
-    
+
     if (isset($Tc) and isset($Tw) and ($Tw >= $Tc)) {
         echo "UNKNOWN - ERROR in arguments Tw ($Tw) >= Tc ($Tc)\n";
         exit(3);
@@ -294,14 +306,14 @@ if ($Pocet > 1) {
         echo "UNKNOWN - ERROR in arguments Sbw ($Sow) >= Sbc ($Soc)\n";
         exit(3);
     }
-    
-    // EXEC    
+
+    // EXEC
     $time_start = getmicrotime();
     $Buff       = @curl_exec($ch);
     $Time       = round(getmicrotime() - $time_start, 3);
     $Size       = strlen($Buff);
     $errnum     = curl_errno($ch);
-    
+
     if ($errnum) {
         if ($errnum == 28) {
             echo "CRITICAL - Timeout ". $Timeout ." sec exceeded\n";
@@ -311,15 +323,15 @@ if ($Pocet > 1) {
             exit(2);
         }
     }
-    
+
     $reqInfo = curl_getinfo($ch);
     @curl_close($ch);
-    
+
     if ($reqInfo['http_code'] != $httpCode) {
         $Status = 2;
         $message .= ' Call return HTTP error code ' . $reqInfo['http_code'] . ' |';
     }
-    
+
     if (isset($Sbw) and ($Size > $Sbw)) {
         $Status = 1;
         $message .= ' Page size ' . $Size . 'B below limit ' . $Sbw . 'B |';
@@ -329,7 +341,7 @@ if ($Pocet > 1) {
     } elseif (isset($Sbc) || isset($Sbw)) {
         $message .= ' Page size ' . $Size . ' between the limits |';
     }
-    
+
     if (isset($Sow) and ($Size < $Sow)) {
         $Status = 1;
         $message .= ' Page size ' . $Size . 'B over limit ' . $Sow . 'B |';
@@ -339,7 +351,7 @@ if ($Pocet > 1) {
     } elseif (isset($Soc) || isset($Sow)) {
         $message .= ' Page size ' . $Size . ' between the limits |';
     }
-    
+
     if (isset($Tw) and ($Time > $Tw)) {
         $Status = 1;
         $message .= ' Download time ' . $Time . 'sec exceeded time limit ' . $Tw . 'sec |';
@@ -349,9 +361,9 @@ if ($Pocet > 1) {
     } elseif (isset($Tc) || isset($Tw)) {
         $message .= ' Download time ' . $Time . 'sec between the limits |';
     }
-    
+
     if (isset($Grep)) {
-        
+
         if (!isset($grepNumber)){
 
         	$foundMessage = ' Strings found: ';
@@ -368,7 +380,7 @@ if ($Pocet > 1) {
 	        }
 
 	        if (!isset($notFound))
-        		$message .=  $foundMessage;            
+        		$message .=  $foundMessage;
 
         } elseif (isset($grepNumber) && sizeof($Grep) == 1) {
 
@@ -382,16 +394,37 @@ if ($Pocet > 1) {
         } else {
         	echo "UNKNOWN - ERROR in argument Gn, if you use this option, it is necessary to indicate only one word to find (-G option)\n";
         	exit(3);
-        }   
+        }
+
+        $message .= ' |';
+    }
+
+    if (isset($NGrep)) {
+
+      	$foundMessage = ' Strings not found: ';
+
+        for ($i = 0; $i < sizeof($NGrep); $i++) {
+            if (strstr($Buff, $NGrep[$i])) {
+                $Status = 2;
+                $found = 1;
+                $message .= ' String ' . $NGrep[$i] . ' found';
+                break;
+            } else {
+                $foundMessage .= $NGrep[$i] . ', ';
+            }
+        }
+
+        if (!isset($found))
+      		$message .=  $foundMessage;
 
         $message .= ' |';
     }
 
     if (isset($String1) or isset($String2)) {
 	    if (isset($String1) and isset($String2)) {
-	                   
+
 	        $First = strpos($Buff, $String1);
-	        
+
 	        if ($First) {
 	            $Last = strpos($Buff, $String2, ($First + strlen($String1)));
 	            if ($Last) {
@@ -409,7 +442,7 @@ if ($Pocet > 1) {
 	        exit(3);
     	}
 	}
-    
+
     if (isset($UseOutput)) {
         $StatusHeader    = "Status:";
         $StatusSeperator = "-";
@@ -426,7 +459,7 @@ if ($Pocet > 1) {
             $message .= substr($Buff, $First + 8);
         }
     }
-        
+
 
 	$message = (isset($tag)) ? $tag." - ".$message : $message;
 	switch ($Status) {
@@ -444,17 +477,17 @@ if ($Pocet > 1) {
     		$Status  = 0;
             break;
     }
-        
+
 
     if ($InludePerf)
         $message .= " time=$Time size=$Size\n";
-    
+
     echo $message;
-    
+
     if ($ShowPage)
         echo "\n\n----------------------------- Page content ----------------------------\n\n" . $Buff."\n";
     exit($Status);
-    
+
 } else {
     Manual();
 }
@@ -467,7 +500,7 @@ function getmicrotime()
 
 function Manual()
 {
-    
+
     echo "------- check_curl.php written by Vit Safar (CZ), v1.0, 20.10.2006 ---------
 ------------------- modified by Donald Fellow (US), v1.1, 08.06.2007 ---------
 ------------------- modified by Ryan Snyder (US), v1.2, 14.04.2011 ---------
@@ -478,7 +511,8 @@ function Manual()
     -A Agent (s)(default: Mozilla/5.0 ... )
     -a Authentication (s)(example: '[user]:[password]')
     -ao Authentication method to use (example: 'CURLAUTH_DIGEST')
-    -G Grep page on STRING (s)(can be set multiple times)
+    -G Search that the indicated text exist on the page (can be set multiple times)
+    -NG Search that the indicated text not exist on the page (can be set multiple times)
     -Gn Number of apparitions of Grep
     -he Any other tags to be sent in http header. Use multiple times for additional headers (example: 'X-Requested-Auth: Digest')
     -L Show page (-)
@@ -495,8 +529,7 @@ function Manual()
     -T Timeout (i)(default: 10sec)
     -O Output Driven Check - Page Should respond with \"Status: OK\" or otherwise
   	-hc HTTP expected code (default: 200)
-	-tag Tag to identify the check in the return message
+	  -tag Tag to identify the check in the return message
   \n Example:
   check_curl.php -U http://test.example.net \n\n";
 }
-

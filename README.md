@@ -8,7 +8,8 @@ Check a web page contents for specific search terms. Built on [check_curl2](http
     -A Agent (s)(default: Mozilla/5.0 ... )
     -a Authentication (s)(example: '[user]:[password]')
     -ao Authentication method to use (example: 'CURLAUTH_DIGEST')
-    -G Grep page on STRING (s)(can be set multiple times)
+    -G Search that the indicated text exist on the page (can be set multiple times)
+    -NG Search that the indicated text not exist on the page (can be set multiple times)
     -Gn Number of apparitions of Grep
     -he Any other tags to be sent in http header. Use multiple times for additional headers (example: 'X-Requested-Auth: Digest')
     -L Show page (-)
