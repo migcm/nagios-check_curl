@@ -4,6 +4,7 @@ Check a web page contents for specific search terms. Built on [check_curl2](http
 
 
 ### Syntax and options:
+	-Me Protocol (Custom string for request. Available protocols: HTTP, FTP, IMAP, POP3 and SMTP)
     -U URL (s)
     -A Agent (s)(default: Mozilla/5.0 ... )
     -a Authentication (s)(example: '[user]:[password]')
