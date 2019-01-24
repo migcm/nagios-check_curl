@@ -20,6 +20,17 @@ if ($Pocet > 1) {
     for ($i = 1; $i < $Pocet; $i++) {
         switch ($argv[$i]) {
 
+			case '-Me':
+				if ($Pocet > $i + 1) {
+					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $argv[++$i]);
+					if ($Debug)
+						echo "\nDEBUG: -Me " . $argv[$i];
+				} else {
+					echo "UNKNOWN - ERROR in parsing argument -Me: missing value\n";
+					exit(3);
+				}
+				break;
+		
             case '-U':
                 if ($Pocet > $i + 1) {
                     curl_setopt($ch, CURLOPT_URL, $argv[++$i]);
@@ -507,6 +518,7 @@ function Manual()
 ------------------- modified by Miguel Calvo (ES), v1.3, 26.06.2018 ---------\n
 
  Syntax:
+	-Me Protocol (Custom string for request. Available protocols: HTTP, FTP, IMAP, POP3 and SMTP)
     -U URL (s)
     -A Agent (s)(default: Mozilla/5.0 ... )
     -a Authentication (s)(example: '[user]:[password]')
