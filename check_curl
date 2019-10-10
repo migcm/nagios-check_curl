@@ -491,7 +491,7 @@ if ($Pocet > 1) {
 
 
     if ($InludePerf)
-        $message .= " time=$Time size=$Size\n";
+        $message .= " |time=$Time size=$Size\n";
 
     echo $message;
 
