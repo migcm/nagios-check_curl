@@ -27,8 +27,10 @@ Check a web page contents for specific search terms. Built on [check_curl2](http
     -T Timeout (i)(default: 10sec)
     -O Output Driven Check - Page Should respond with \"Status: OK\" or otherwise
     -hc HTTP expected code (default: 200)
-	-tag Tag to identify the check in the return message
-
+    -tag Tag to identify the check in the return message
+    -Px Set proxy to use
+    -PxPort proxy port
+    -PxAuth User name and password to use for proxy authentication
 
 ### Examples:
 ```check_curl -U http://test.example.net```
@@ -36,3 +38,5 @@ Check a web page contents for specific search terms. Built on [check_curl2](http
 ```check_curl -U http://test.example.net:8888/info -he 'X-Requested-Auth: Digest' -ao CURLAUTH_DIGEST -a "USER:PASSWORD" -G searchme -G searchme2```
 
 ```check_curl -U http://test.example.net:8888/info -a "USER:PASSWORD" -G "<status>0</status>" -Gn 5```
+
+```check_curl -Px 'testproxy.net' -PxPort '8080' -PxAuth 'PROXY_USER:PROXY_PASSWORD' -U http://test.example.net```

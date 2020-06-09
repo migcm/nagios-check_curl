@@ -261,6 +261,39 @@ if ($Pocet > 1) {
                 }
                 break;
 
+            case '-Px':
+                if ($Pocet > $i + 1) {
+                    curl_setopt($ch, CURLOPT_PROXY, $argv[++$i]);
+                    if ($Debug)
+                        echo "\nDEBUG: -Px " . $argv[$i];
+                } else {
+                    echo "UNKNOWN - ERROR in parsing argument -Px: missing value\n";
+                    exit(3);
+                }
+                break;
+
+            case '-PxPort':
+                if ($Pocet > $i + 1) {
+                    curl_setopt($ch, CURLOPT_PROXYPORT, $argv[++$i]);
+                    if ($Debug)
+                        echo "\nDEBUG: -PxPort " . $argv[$i];
+                } else {
+                    echo "UNKNOWN - ERROR in parsing argument -PxPort: missing value\n";
+                    exit(3);
+                }
+                break;
+
+            case '-PxAuth':
+                if ($Pocet > $i + 1) {
+                    curl_setopt($ch, CURLOPT_PROXYUSERPWD, $argv[++$i]);
+                    if ($Debug)
+                        echo "\nDEBUG: -PxAuth " . $argv[$i];
+                } else {
+                    echo "UNKNOWN - ERROR in parsing argument -PxAuth: missing value\n";
+                    exit(3);
+                }
+                break;    
+
             case '--help':
             case '-h':
                 Manual();
@@ -515,7 +548,8 @@ function Manual()
     echo "------- check_curl.php written by Vit Safar (CZ), v1.0, 20.10.2006 ---------
 ------------------- modified by Donald Fellow (US), v1.1, 08.06.2007 ---------
 ------------------- modified by Ryan Snyder (US), v1.2, 14.04.2011 ---------
-------------------- modified by Miguel Calvo (ES), v1.3, 26.06.2018 ---------\n
+------------------- modified by Miguel Calvo (ES), v1.3, 26.06.2018 ---------
+------------------- modified by Tatsuya Morikawa (JP), v1.4, 9.06.2020 ---------\n
 
  Syntax:
 	-Me Protocol (Custom string for request. Available protocols: HTTP, FTP, IMAP, POP3 and SMTP)
@@ -541,7 +575,11 @@ function Manual()
     -T Timeout (i)(default: 10sec)
     -O Output Driven Check - Page Should respond with \"Status: OK\" or otherwise
   	-hc HTTP expected code (default: 200)
-	  -tag Tag to identify the check in the return message
+    -tag Tag to identify the check in the return message
+    -Px Set proxy to use
+    -PxPort proxy port
+    -PxAuth User name and password to use for proxy authentication
+
   \n Example:
   check_curl.php -U http://test.example.net \n\n";
 }
