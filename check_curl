@@ -376,20 +376,20 @@ if ($Pocet > 1) {
         $message .= ' Call return HTTP error code ' . $reqInfo['http_code'] . ' |';
     }
 
-    if (isset($Sbw) and ($Size > $Sbw)) {
+    if (isset($Sbw) and ($Size < $Sbw)) {
         $Status = 1;
         $message .= ' Page size ' . $Size . 'B below limit ' . $Sbw . 'B |';
-    } elseif (isset($Sbc) and ($Size > $Sbc)) {
+    } elseif (isset($Sbc) and ($Size < $Sbc)) {
         $Status = 2;
         $message .= ' Page size ' . $Size . 'B below limit ' . $Sbc . 'B |';
     } elseif (isset($Sbc) || isset($Sbw)) {
         $message .= ' Page size ' . $Size . ' between the limits |';
     }
 
-    if (isset($Sow) and ($Size < $Sow)) {
+    if (isset($Sow) and ($Size > $Sow)) {
         $Status = 1;
         $message .= ' Page size ' . $Size . 'B over limit ' . $Sow . 'B |';
-    } elseif (isset($Soc) and ($Size < $Soc)) {
+    } elseif (isset($Soc) and ($Size > $Soc)) {
         $Status = 2;
         $message .= ' Page size ' . $Size . 'B over limit ' . $Soc . 'B |';
     } elseif (isset($Soc) || isset($Sow)) {
