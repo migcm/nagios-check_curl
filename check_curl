@@ -20,17 +20,17 @@ if ($Pocet > 1) {
     for ($i = 1; $i < $Pocet; $i++) {
         switch ($argv[$i]) {
 
-			case '-Me':
-				if ($Pocet > $i + 1) {
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $argv[++$i]);
-					if ($Debug)
-						echo "\nDEBUG: -Me " . $argv[$i];
-				} else {
-					echo "UNKNOWN - ERROR in parsing argument -Me: missing value\n";
-					exit(3);
-				}
-				break;
-		
+        case '-Me':
+            if ($Pocet > $i + 1) {
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $argv[++$i]);
+                if ($Debug)
+                    echo "\nDEBUG: -Me " . $argv[$i];
+            } else {
+                echo "UNKNOWN - ERROR in parsing argument -Me: missing value\n";
+                exit(3);
+            }
+            break;
+
             case '-U':
                 if ($Pocet > $i + 1) {
                     curl_setopt($ch, CURLOPT_URL, $argv[++$i]);
@@ -250,8 +250,8 @@ if ($Pocet > 1) {
                     echo "\nDEBUG: -I";
                 break;
 
-			case '-tag':
-				if ($Pocet > $i + 1) {
+            case '-tag':
+                if ($Pocet > $i + 1) {
                     $tag = $argv[++$i];
                     if ($Debug)
                         echo "\nDEBUG: -tag " . $argv[$i];
@@ -292,7 +292,7 @@ if ($Pocet > 1) {
                     echo "UNKNOWN - ERROR in parsing argument -PxAuth: missing value\n";
                     exit(3);
                 }
-                break;    
+                break;
 
             case '--help':
             case '-h':
@@ -373,85 +373,84 @@ if ($Pocet > 1) {
 
     if ($reqInfo['http_code'] != $httpCode) {
         $Status = 2;
-        $message .= ' Call return HTTP error code ' . $reqInfo['http_code'] . ' |';
+        $message .= 'Call return HTTP error code ' . $reqInfo['http_code'] . '. ';
     }
 
-    if (isset($Sbw) and ($Size > $Sbw)) {
-        $Status = 1;
-        $message .= ' Page size ' . $Size . 'B below limit ' . $Sbw . 'B |';
-    } elseif (isset($Sbc) and ($Size > $Sbc)) {
+    if (isset($Sbc) and ($Size < $Sbc)) {
         $Status = 2;
-        $message .= ' Page size ' . $Size . 'B below limit ' . $Sbc . 'B |';
+        $message .= 'Page size ' . $Size . 'B below limit ' . $Sbc . 'B. ';
+    } elseif (isset($Sbw) and ($Size < $Sbw)) {
+        $Status = 1;
+        $message .= 'Page size ' . $Size . 'B below limit ' . $Sbw . 'B. ';
     } elseif (isset($Sbc) || isset($Sbw)) {
-        $message .= ' Page size ' . $Size . ' between the limits |';
+        $message .= 'Page size ' . $Size . ' above the lower limits. ';
     }
 
-    if (isset($Sow) and ($Size < $Sow)) {
-        $Status = 1;
-        $message .= ' Page size ' . $Size . 'B over limit ' . $Sow . 'B |';
-    } elseif (isset($Soc) and ($Size < $Soc)) {
+    if (isset($Soc) and ($Size > $Soc)) {
         $Status = 2;
-        $message .= ' Page size ' . $Size . 'B over limit ' . $Soc . 'B |';
+        $message .= 'Page size ' . $Size . 'B over limit ' . $Soc . 'B. ';
+    } elseif (isset($Sow) and ($Size > $Sow)) {
+        $Status = 1;
+        $message .= 'Page size ' . $Size . 'B over limit ' . $Sow . 'B. ';
     } elseif (isset($Soc) || isset($Sow)) {
-        $message .= ' Page size ' . $Size . ' between the limits |';
+        $message .= 'Page size ' . $Size . ' below the upper limits. ';
     }
 
-    if (isset($Tw) and ($Time > $Tw)) {
-        $Status = 1;
-        $message .= ' Download time ' . $Time . 'sec exceeded time limit ' . $Tw . 'sec |';
-    } elseif (isset($Tc) and ($Time > $Tc)) {
+    if (isset($Tc) and ($Time > $Tc)) {
         $Status = 2;
-        $message .= ' Download time ' . $Time . 'sec exceeded time limit ' . $Tc . 'sec |';
+        $message .= 'Download time ' . $Time . 'sec exceeded time limit ' . $Tc . 'sec. ';
+    } elseif (isset($Tw) and ($Time > $Tw)) {
+        $Status = 1;
+        $message .= 'Download time ' . $Time . 'sec exceeded time limit ' . $Tw . 'sec. ';
     } elseif (isset($Tc) || isset($Tw)) {
-        $message .= ' Download time ' . $Time . 'sec between the limits |';
+        $message .= 'Download time ' . $Time . 'sec below the limits. ';
     }
 
     if (isset($Grep)) {
 
-        if (!isset($grepNumber)){
+        if (!isset($grepNumber)) {
 
-        	$foundMessage = ' Strings found: ';
+            $foundMessage = 'Strings found: ';
 
-	        for ($i = 0; $i < sizeof($Grep); $i++) {
-	            if (!strstr($Buff, $Grep[$i])) {
-	                $Status = 2;
-	                $notFound = 1;
-	                $message .= ' String ' . $Grep[$i] . ' not found';
-	                break;
-	            } else {
-	                $foundMessage .= $Grep[$i] . ', ';
-	            }
-	        }
+            for ($i = 0; $i < sizeof($Grep); $i++) {
+                if (!strstr($Buff, $Grep[$i])) {
+                    $Status = 2;
+                    $notFound = 1;
+                    $message .= 'String ' . $Grep[$i] . ' not found. ';
+                    break;
+                } else {
+                    $foundMessage .= $Grep[$i] . ', ';
+                }
+            }
 
-	        if (!isset($notFound))
-        		$message .=  $foundMessage;
+            if (!isset($notFound))
+                $message .=  $foundMessage;
 
         } elseif (isset($grepNumber) && sizeof($Grep) == 1) {
 
-        	if (substr_count($Buff, $Grep[0]) != $grepNumber) {
+            if (substr_count($Buff, $Grep[0]) != $grepNumber) {
                 $Status = 2;
-                $message .= ' Not found '.$grepNumber.' occurrences of the String ' .$Grep[0];
+                $message .= 'Not found '.$grepNumber.' occurrences of the String ' .$Grep[0] . ". ";
             } else {
-                $message = ' '.$grepNumber. ' occurrences found of the String '.$Grep[0];
+                $message .= $grepNumber. ' occurrences found of the String '.$Grep[0] . ". ";
             }
 
         } else {
-        	echo "UNKNOWN - ERROR in argument Gn, if you use this option, it is necessary to indicate only one word to find (-G option)\n";
-        	exit(3);
+            echo "UNKNOWN - ERROR in argument Gn, if you use this option, it is necessary to indicate only one word to find (-G option)\n";
+            exit(3);
         }
 
-        $message .= ' |';
     }
 
     if (isset($NGrep)) {
 
-      	$foundMessage = ' Strings not found: ';
+        $foundMessage = 'Strings not found: ';
 
         for ($i = 0; $i < sizeof($NGrep); $i++) {
             if (strstr($Buff, $NGrep[$i])) {
                 $Status = 2;
                 $found = 1;
-                $message .= ' String ' . $NGrep[$i] . ' found';
+                $message .= 'String ' . $NGrep[$i] . ' found. ';
                 break;
             } else {
                 $foundMessage .= $NGrep[$i] . ', ';
@@ -459,33 +458,31 @@ if ($Pocet > 1) {
         }
 
         if (!isset($found))
-      		$message .=  $foundMessage;
-
-        $message .= ' |';
+            $message .=  $foundMessage;
     }
 
     if (isset($String1) or isset($String2)) {
-	    if (isset($String1) and isset($String2)) {
+        if (isset($String1) and isset($String2)) {
 
-	        $First = strpos($Buff, $String1);
+            $First = strpos($Buff, $String1);
 
-	        if ($First) {
-	            $Last = strpos($Buff, $String2, ($First + strlen($String1)));
-	            if ($Last) {
-	                $message .= " Find ".substr($Buff, ($First + strlen($String1)), ($Last - $First - strlen($String1))). "between positions ".$First ." and ". $Last . " |";
-	            } else {
-	                echo "UNKNOWN - ERROR in arguments -S. Second string ". $String2 ." not found\n";
-	                exit(3);
-	            }
-	        } else {
-	            echo "UNKNOWN - ERROR in arguments -S. First string ". $String1 ." not found\n";
-	            exit(3);
-	        }
-	    } else {
-	        echo "UNKNOWN - ERROR in arguments -S. Must be two strings, before and after\n";
-	        exit(3);
-    	}
-	}
+            if ($First) {
+                $Last = strpos($Buff, $String2, ($First + strlen($String1)));
+                if ($Last) {
+                    $message .= "Find ".substr($Buff, ($First + strlen($String1)), ($Last - $First - strlen($String1))). "between positions ".$First ." and ". $Last . ". ";
+                } else {
+                    echo "UNKNOWN - ERROR in arguments -S. Second string ". $String2 ." not found\n";
+                    exit(3);
+                }
+            } else {
+                echo "UNKNOWN - ERROR in arguments -S. First string ". $String1 ." not found\n";
+                exit(3);
+            }
+        } else {
+            echo "UNKNOWN - ERROR in arguments -S. Must be two strings, before and after\n";
+            exit(3);
+        }
+    }
 
     if (isset($UseOutput)) {
         $StatusHeader    = "Status:";
@@ -505,26 +502,46 @@ if ($Pocet > 1) {
     }
 
 
-	$message = (isset($tag)) ? $tag." - ".$message : $message;
-	switch ($Status) {
+ $message = (isset($tag)) ? $tag.": ".$message : $message;
+ switch ($Status) {
         case 1:
-            $message = 'WARNING - ' . $message;
+            $message = 'WARNING: ' . $message;
             break;
         case 2:
-            $message = 'CRITICAL - ' . $message;
+            $message = 'CRITICAL: ' . $message;
             break;
         case 3:
-        	$message = 'UNKNOWN - ' . $message;
-        	break;
+         $message = 'UNKNOWN: ' . $message;
+         break;
         default:
-            $message = 'OK - ' . $message;
-    		$Status  = 0;
+            $message = 'OK: ' . $message;
+      $Status  = 0;
             break;
     }
 
 
-    if ($InludePerf)
-        $message .= " |time=$Time size=$Size\n";
+    if ($InludePerf) {
+
+        $size_warn = "";
+        if (isset($Sbw) && isset($Sow)) {
+            $size_warn = $Sbw.":".$Sow;
+        } elseif (isset($Sbw)) {
+            $size_warn = $Sbw.":";
+        } elseif (isset($Sow)) {
+           $size_warn = "~:".$Sow;
+        }
+
+        $size_crit = "";
+        if (isset($Sbc) && isset($Soc)) {
+            $size_crit = $Sbc.":".$Soc;
+        } elseif (isset($Sbc)) {
+            $size_crit = $Sbc.":";
+        } elseif (isset($Soc)) {
+            $size_crit = "~:".$Soc;
+        }
+
+        $message .= "|time=${Time}s;" . (isset($Tw) ? "~:".$Tw : "") . ";" . (isset($Tc) ? "~:".$Tc : "") . ";0.0 size=${Size}B;${size_warn};${size_crit};0\n";
+    }
 
     echo $message;
 
@@ -550,9 +567,8 @@ function Manual()
 ------------------- modified by Ryan Snyder (US), v1.2, 14.04.2011 ---------
 ------------------- modified by Miguel Calvo (ES), v1.3, 26.06.2018 ---------
 ------------------- modified by Tatsuya Morikawa (JP), v1.4, 9.06.2020 ---------\n
-
  Syntax:
-	-Me Protocol (Custom string for request. Available protocols: HTTP, FTP, IMAP, POP3 and SMTP)
+    -Me Protocol (Custom string for request. Available protocols: HTTP, FTP, IMAP, POP3 and SMTP)
     -U URL (s)
     -A Agent (s)(default: Mozilla/5.0 ... )
     -a Authentication (s)(example: '[user]:[password]')
@@ -574,12 +590,11 @@ function Manual()
     -S Find string between ARG1 and ARG2, return first match (s s) (example: value=\" \" )
     -T Timeout (i)(default: 10sec)
     -O Output Driven Check - Page Should respond with \"Status: OK\" or otherwise
-  	-hc HTTP expected code (default: 200)
+    -hc HTTP expected code (default: 200)
     -tag Tag to identify the check in the return message
     -Px Set proxy to use
     -PxPort proxy port
     -PxAuth User name and password to use for proxy authentication
-
   \n Example:
   check_curl.php -U http://test.example.net \n\n";
 }
