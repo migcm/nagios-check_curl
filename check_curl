@@ -12,6 +12,7 @@ $message     = '';
 $ShowPage   = 0;
 $authOption = '';
 $exist = true;
+$cookiejar = '/tmp/.check_curl.cookies.txt';
 
 $ch    = curl_init();
 
@@ -311,6 +312,7 @@ if ($Pocet > 1) {
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_USERAGENT, $Agent);
     curl_setopt($ch, CURLOPT_TIMEOUT, $Timeout);
+    curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiejar);
 
     if (isset($headers)) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -530,6 +532,8 @@ if ($Pocet > 1) {
 
     if ($ShowPage)
         echo "\n\n----------------------------- Page content ----------------------------\n\n" . $Buff."\n";
+    if ($cookiejar)
+	unlink($cookiejar);
     exit($Status);
 
 } else {
